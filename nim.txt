@@ -1,0 +1,92 @@
+$ ./nim.sh 
+--- 4
+random VS random:	5011 - 4989
+random VS perfect:	5034 - 4966
+random VS search:	4929 - 5071
+perfect VS random:	9235 - 765
+perfect VS perfect:	9269 - 731
+perfect VS search:	9253 - 747
+search VS random:	9244 - 756
+search VS perfect:	9213 - 787
+search VS search:	9265 - 735
+memorized positions: 1001
+4.35 s
+11776 kB
+--- 6
+random VS random:	5078 - 4922
+random VS perfect:	4954 - 5046
+random VS search:	5018 - 4982
+perfect VS random:	9384 - 616
+perfect VS perfect:	9352 - 648
+perfect VS search:	9334 - 666
+search VS random:	9353 - 647
+search VS perfect:	9370 - 630
+search VS search:	9328 - 672
+memorized positions: 7958
+7.45 s
+13312 kB
+--- 8
+random VS random:	4958 - 5042
+random VS perfect:	5047 - 4953
+random VS search:	5067 - 4933
+perfect VS random:	9403 - 597
+perfect VS perfect:	9388 - 612
+perfect VS search:	9337 - 663
+search VS random:	9351 - 649
+search VS perfect:	9374 - 626
+search VS search:	9412 - 588
+memorized positions: 43038
+10.89 s
+21016 kB
+--- 10
+random VS random:	5028 - 4972
+random VS perfect:	5008 - 4992
+random VS search:	4985 - 5015
+perfect VS random:	9360 - 640
+perfect VS perfect:	9357 - 643
+perfect VS search:	9350 - 650
+search VS random:	9340 - 660
+search VS perfect:	9354 - 646
+search VS search:	9324 - 676
+memorized positions: 181243
+16.95 s
+65120 kB
+--- 12
+random VS random:	4868 - 5132
+random VS perfect:	5031 - 4969
+random VS search:	4974 - 5026
+perfect VS random:	9413 - 587
+perfect VS perfect:	9355 - 645
+perfect VS search:	9375 - 625
+search VS random:	9364 - 636
+search VS perfect:	9384 - 616
+search VS search:	9391 - 609
+memorized positions: 625082
+32.49 s
+185024 kB
+--- 14
+random VS random:	5081 - 4919
+random VS perfect:	5027 - 4973
+random VS search:	4883 - 5117
+perfect VS random:	9380 - 620
+perfect VS perfect:	9385 - 615
+perfect VS search:	9357 - 643
+search VS random:	9316 - 684
+search VS perfect:	9343 - 657
+search VS search:	9353 - 647
+memorized positions: 1891159
+77.25 s
+606716 kB
+--- 16
+random VS random:	4894 - 5106
+random VS perfect:	5053 - 4947
+random VS search:	4964 - 5036
+perfect VS random:	9341 - 659
+perfect VS perfect:	9376 - 624
+perfect VS search:	9393 - 607
+search VS random:	9281 - 719
+search VS perfect:	9326 - 674
+search VS search:	9339 - 661
+memorized positions: 5060005
+199.87 s
+1680608 kB

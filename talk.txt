@@ -1,0 +1,205 @@
+# About me
+I'm Pietro Lepori, I joined the student association POuL
+Politecnico Open unix Labs (poul.org)
+I study mathematics at unimi.
+
+Contact me: Telegram REDACTED
+
+# What is this talk about?
+Z3, an SMT-solver.
+It is a software by Microsoft, with MIT License.
+
+What is it for?
+Let's take a long detour to talk about computers
+
+# What can computers do?
+What do we think machines can do?
+What do we think machines can not do?
+What can you make a computer do?
+
+# There is interest in sci-fi:
+- can an android learn how to win a game?
+(Star Trek TNG: s2e21 "Peak Performance")
+- can a supercomputer learn from examples?
+(WarGames, 1983)
+
+# In history:
+-- Deep Blue vs. Kasparov
+-> loses: 1989 (as Deep Thought)
+-> wins only 1 game in 1996
+(1st time under standard conditions against a world champion)
+1 win, 2 draw, 3 losses
+-> wins 1997
+3 wins, 1 draw, 2 losses
+-- AlphaZero vs. Stockfish
+2018: 155 wins, 839 draws, 6 losses
+
+Important distinction: Deep Blue and Stockfish have an
+embedded expert knoledge of the game.
+AlphaZero only knows the rules and learns how to play by itself
+
+# Why games?
+They are simple models for interesting problems.
+Rules and objectives are well defined and measurable.
+
+# What can we say about games in general?
+What kind of games?
+Dices: are unpredictable by definition.
+Strategies for games of chance must use statistical modeling and optimization of a taget: expected value.
+Probabilities are continuous so expected value and other descriptive parameters are continuous.
+Optimization in a contiuous multi-dimensional configuration space:
+-> modern machine learning
+Not what I'm going to talk about...
+
+# "Good" games:
+No chance involved and finite discrete configuration space.
+Then Zermelo's theorem (a version of) applies.
+It requires:
+-> two players
+-> complete information
+-> no infinite games or infinite choices
+and concludes that there is a strategy for one of the two players to never lose a game.
+
+# Zermelo's idea
+The main idea is to look at the tree of game configurations:
+- leaves (end positions) are known
+- by induction each internal node of player 1 is either a losing position
+or has a move towards a losing position for player 2
+- and each internal node of player 2 is either a losing position
+or has a move towards a losing position for player 1
+- the root is either losing for player 1 or for player 2
+
+Inspired by it there is a generic way to solve those games:
+- explore the tree (or DAG) of reachable states
+- choose to move to a non-losing position, if any
+
+# Example: Nim
+Stacks of tokens, players move in turns.
+Every turn each player removes at least one token from exacly one stack.
+Who cannot move loses.
+
+# Game tree exploration doesn't work
+Problem: explonential explosion
+Solutions:
+-- partial explorations with heuristics (leaves are not reached):
+-> minimax algorithms
+-- pruning
+-> minimax with alpha-beta pruning
+-- more pruning using domain specific knowledge
+-> domain specific optimizations
+-- mathematical insight
+-> special algorithms
+
+There are generic brute-force strategies.
+The intelligence needed to make them more feasible depends on the specific problem.
+
+Is there a problem that can help with other problems?
+
+# Let's talk about problems
+The study of decision problems brought out some interesting definitions.
+
+Complexity classes: how fast the best solution process grows with the problem's size?
+
+P : execution time is bounded by a polynomial over the input size
+NP: there is some trace, a sequence of arbitrary choices, depending on the input, that added to it makes the problem polynomial in time (with respect to the original input size)
+
+# Example:
+An arbitrarily sized Sudoku can be checked "fast" once completed.
+So to find a solution is a problem in NP:
+there exists a sequence of guesses that is right and can be checked to be right, in polynomial time.
+
+Many interesting and difficult problems are in NP, some are special...
+
+# A solution strategy: backtracking
+By the definition of NP we can devise a general search strategy: guess the right choice and proceed, if it was wrong go back and try with another one.
+This technique is called backtracking.
+With a bit of care it will work but we encounter the same problem of exponential explosion of possibilities.
+It is akin to minimax in the sense that it is an exploration of a tree of states and similar considerations apply.
+
+# SAT
+Boolean satisfiability: given a formula of propositional logic is there an assignment of the variables that makes it true?
+
+A boolean formula is made of:
+- propositional letters (or variables)
+- logical connectives: And, Or, Not, Implies
+- logical contants: False, True
+
+Given a truth value (true or false) for its variables, a formula gets a truth value using the truth tables of the connectives.
+This evaluation process is "easy", so SAT is a problem in NP.
+
+An instance of SAT problem is a finite set of formulae, called constraints.
+A solution is:
+- sat, if there exists an assignment of the variables that satisfies all constraints
+- unsat, if such assignment does not exist
+- unknow, if the solver doesn't know the answer.
+
+# SAT is NP-complete
+Every problem in NP can be reduced in polynomial time to SAT.
+This is proved by Cook–Levin theorem, the idea is that the evolution of a machine can be modelled by a set of boolean constraints.
+So the existence of the trace of right choices for the problem corresponds to an assignement that satisfies all the constraints that define the machine.
+This idea can be developed in practice into the field of symbolic execution.
+
+# Can we solve SAT?
+An easy solution is to try each possible assignment...
+the number doubles for each variable, this approach becames rapidly unfeasible.
+
+Proportional logic has been studied for a long time and we have some theoretical tools to transform formulae and derive new ones.
+
+An interesting fact to note is that the difficulty of a specific problem may depend on the strategy adopted, sometimes there are shortcuts.
+
+# Logical calculi
+A calculus is a collection of inference rules.
+The rules are ways to transform fomulae.
+Some famous rules are:
+- modus ponens (implication elimination):
+given Implies(p,q) and p we can derive q
+- conjunction elimination:
+given And(p,q) we can derive p and q
+- negation elimination:
+given p and Not(p) we can derive False
+...
+
+A rule is valid when every time the premises are true the conclusion in also true.
+The only interesting calculi are the sound ones: those that have only valid rules.
+Note that given a formula, if False can be derived using a sound calculus then the formula was not satisfiable.
+A calcuclus is refutation-complete when given any formula if that formula is unsatisfiable then False can be derived from it with the calculus.
+
+# Saturation
+If we got a (sound) propositional calculus that is also refutation-complete we could try to saturate: apply the rules repeatedly to see if False is produced.
+If we do so in a way that:
+- is fair, every rule application is eventually tried
+- terminates (redundant formulae are discarted)
+we have a procedure that decides a SAT problem: sat if and only if False is not produced.
+
+# What does Z3 use?
+Various mixes of saturation and backtracking can be mixed to attack a SAT instance.
+
+The SAT solver core of Z3 is based on the conflict-driven clause learning procedure.
+CDCL saturates with the resolution rule then makes arbitrary choiches on the variables and repeat.
+When a contradiction is reached there is non-chronological backtracking to the choice that generated the conflict and a new clause is learned from this branch.
+
+# What else does Z3 do?
+There are also various solvers for satisfiability problems for theories of first order logic.
+Those are to talk about models that have infinite domains (integers, real numbers, arrays, ...).
+The difference with propositional logic is that the atoms that compose formulae are predicates about individual.
+Moreover universal and existential quantifier (ForAll, Exists) can be used in formulae to assert constrains on infinite families.
+
+Z3 also provides an optimiziation solver that allows to maximise objectives and allows soft constraints.
+
+# Possible applications
+- scheduling (timetables, optimization, ...)
+- symbolic execution to check invariants
+- automatic theorem prooving
+- solve games
+- fun :)
+
+# What will never be possible
+Some theories are decidable so, in theory, a solver can always conclude sat or unsat.
+In practise the complexity grows more than exponentially.
+On infinite domains there is often no fast procedure to check if a solution is correct.
+Those problems are not in NP and a solver maight have super-exponential complexity.
+
+Moreover some theories are not decidable.
+For example, Gödel's first incompleteness theorem amounts to the fact that:
+- for every solver for the theory of arithmetic on natural numbers
+- there is a true sentence that the solver can not prove (the negation is not unsat but unknown)
